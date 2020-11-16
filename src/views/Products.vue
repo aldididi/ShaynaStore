@@ -71,8 +71,8 @@
               <div class="col-lg-6">
                 <div class="product-details text-left">
                   <div class="pd-title">
-                    <span>oranges</span>
-                    <h3>Pure Pineapple</h3>
+                    <span>{{ productDetails.type }}</span>
+                    <h3>{{ productDetails.name }}</h3>
                   </div>
                   <div class="pd-desc">
                     <p>
@@ -97,7 +97,7 @@
                       quam impedit praesentium veritatis quis beatae ea atque
                       perferendis voluptates velit architecto?
                     </p>
-                    <h4>$495.00</h4>
+                    <h4>${{ productDetails.price }}</h4>
                   </div>
                   <div class="quantity">
                     <router-link to="/cart"
@@ -126,6 +126,7 @@ import Footer from "@/components/FooterShayna.vue";
 import RelatedProducts from "@/components/RelatedProducts.vue";
 
 import carousel from "vue-owl-carousel";
+import axios from "axios";
 
 export default {
   name: "products",
@@ -144,12 +145,24 @@ export default {
         "img/mickey3.jpg",
         "img/mickey4.jpg",
       ],
+      productDetails: [],
     };
   },
   methods: {
     changeImage(urlImage) {
       this.img_default = urlImage;
     },
+  },
+  mounted() {
+    axios
+      .get("http://127.0.0.1:8000/api/products", {
+        params: {
+          id: this.$route.params.id,
+        },
+      })
+
+      .then((res) => (this.productDetails = res.data.data))
+      .catch((err) => console.log(err));
   },
 };
 </script>
